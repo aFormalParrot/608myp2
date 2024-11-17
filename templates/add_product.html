@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="icon" href="https://cdn.glitch.global/fbbe0751-dd17-47c2-9d1f-69b501a8cf80/logo.png?v=1731462727286" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <script>
+      // JavaScript to update form fields based on selected product type
+      function updateFields() {
+          const productTypes = {{ product_types | tojson }};
+          const selectedType = document.getElementById('product_type').value;
+          const paramsContainer = document.getElementById('params-container');
+          
+          // Clear any existing fields
+          paramsContainer.innerHTML = '';
+
+          // Populate fields based on selected type
+          if (productTypes[selectedType]) {
+              for (const [param, paramType] of Object.entries(productTypes[selectedType])) {
+                  const label = document.createElement('label');
+                  label.innerText = param;
+                  const input = document.createElement('input');
+                  input.name = param;
+                  input.type = paramType === 'text' ? 'text' : paramType === 'value' ? 'number' : 'date';
+                  paramsContainer.appendChild(label);
+                  paramsContainer.appendChild(input);
+                  paramsContainer.appendChild(document.createElement('br'));
+              }
+          }
+      }
+    </script>
+</head>
+<body>
+    <h1>Add Product</h1>
+    <form action="{{ url_for('add_product') }}" method="post">
+        <!-- Static Fields -->
+        <label form="name">Product 
+          Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label form="p_name">Full Name:</label>
+        <input type="text" id="p_name" name="p_name" required><br>
+        
+        <label form="hb">Homebase:</label>
+        <input type="text" id="hb" name="hb" required><br>
+      
+        <label form="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required><br>
+
+        <label form="condition">Condition:</label>
+        <select id="condition" name="condition" required>
+            <option value="NEW">NEW</option>
+            <option value="LIGHTLY USED">LIGHTLY USED</option>
+            <option value="HEAVILY USED">HEAVILY USED</option>
+        </select><br>
+
+        <label for="date_r">Date Received:</label>
+        <input type="date" id="date_r" name="date_r" required><br>
+
+        <!-- Product Type Selection -->
+        <label for="product_type">Product Type:</label>
+        <select id="product_type" name="product_type" onchange="updateFields()" required>
+            {% for type in product_types %}
+            <option value="{{ type }}">{{ type }}</option>
+            {% endfor %}
+        </select><br>
+
+        <!-- Dynamic Fields based on Product Type -->
+        <div id="params-container">
+            <!-- Additional fields for parameters will appear here based on product type -->
+        </div>
+
+        <button type="submit">Add Product</button>
+    </form>
+</body>
+</html>

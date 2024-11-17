@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        #chat-box { margin: 0 auto; max-width: 600px; padding: 20px; background-color: white; border-radius: 8px; }
+        #messages { max-height: 400px; overflow-y: scroll; margin-bottom: 10px; border: 1px solid #ddd; padding: 10px; }
+        #messages div { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div id="chat-box">
+        <h2>Chat Room</h2>
+        <div id="messages"></div>
+        <input type="text" id="name" placeholder="Your name" />
+        <input type="text" id="message" placeholder="Type your message" />
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="window.location.href='{{ url_for('index') }}'">Back to Product List</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Fetch and display messages
+        function fetchMessages() {
+            $.get('/get_messages', function (data) {
+                $('#messages').html('');
+                data.messages.forEach(msg => {
+                    $('#messages').append(`<div><strong>${msg.name}:</strong> ${msg.message}</div>`);
+                });
+            });
+        }
+
+        // Send message to the server
+        function sendMessage() {
+            const name = $('#name').val();
+            const message = $('#message').val();
+            if (name && message) {
+                $.ajax({
+                    url: '/send_message',
+                    method: 'POST',
+                    contentType: 'application/json', // Set content type to JSON
+                    data: JSON.stringify({ name: name, message: message }), // Send message data as JSON
+                    success: function () {
+                        $('#message').val(''); // Clear message input
+                        fetchMessages();       // Refresh messages
+                    },
+                    error: function () {
+                        alert('Error sending message');
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            fetchMessages(); // Load messages initially
+            setInterval(fetchMessages, 5000); // Refresh every 5 seconds
+        });
+    </script>
+</body>
+</html>

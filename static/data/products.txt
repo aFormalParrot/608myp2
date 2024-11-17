@@ -1,0 +1,16 @@
+[
+    {
+        "id": "001",
+        "name": "Green T-Shirt",
+        "type": "Clothing",
+        "settings": {
+            "quantity": "1",
+            "Type": "T-Shirt"
+        },
+        "p_name": "Artem Makarov",
+        "hb": "6.08 Portillo",
+        "condition": "NEW",
+        "date_r": "2024-11-16",
+        "image": null
+    }
+]

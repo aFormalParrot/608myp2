@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>608 MYP - Donation</title>
+    <link
+      rel="icon"
+      href="https://cdn.glitch.global/fbbe0751-dd17-47c2-9d1f-69b501a8cf80/logo.png?v=1731462727286"
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <h1>Product List</h1>
+    <form method="GET" action="{{ url_for('search_by_id') }}">
+      <input type="text" name="query" placeholder="Search products" />
+      <button type="submit">Search</button>
+    </form>
+
+    <ul>
+      {% for product in products %}
+      <li>
+        <strong>{{ product['name'] }}</strong> ({{ product['type'] }})
+        <ul>
+          <li><strong>Product ID:</strong> {{ product['id'] }}</li>
+          <li><strong>Full Name:</strong> {{ product['p_name'] }}</li>
+          <li><strong>Homebase:</strong> {{ product['hb'] }}</li>
+          <li><strong>Condition:</strong> {{ product['condition'] }}</li>
+          <li><strong>Date Received:</strong> {{ product['date_r'] }}</li>
+          <li><strong>Parameters:</strong></li>
+          <ul>
+            {% for key, value in product['settings'].items() %}
+            <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+          </ul>
+        </ul>
+        <button onclick="generateQRCode('{{ product['id'] }}')">
+          Generate QR Code
+        </button>
+        <div id="qr-code-{{ product['id'] }}"></div>
+        <a href="{{ url_for('remove_product', product_id=product['id']) }}"
+          >Remove
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <button onclick="window.location.href='{{ url_for('add_product') }}'">
+      Add New Product
+    </button>
+    <button onclick="window.location.href='{{ url_for('settings') }}'">
+      Product Settings
+    </button>
+    <button onclick="window.location.href='{{ url_for('viewer') }}'">
+      Switch to Viewer Mode
+    </button>
+    <button onclick="window.location.href='{{ url_for('table') }}'">
+      Product Table
+    </button>
+
+    <!-- Chat Button (Initially Visible) -->
+    <button
+      id="chat-button"
+      onclick="window.location.href='{{ url_for('chat')}}'"
+    >
+      Go to Chat
+    </button>
+
+    <script>
+      // Function to toggle the visibility of the Chat Button
+      function toggleChatButton() {
+        const chatButton = document.getElementById("chat-button");
+        chatButton.style.display =
+          chatButton.style.display === "none" ? "block" : "none";
+      }
+      toggleChatButton();
+      // Event listener for backtick (`) key to toggle chat button visibility
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "`") {
+          toggleChatButton(); // Toggle visibility of the Chat Button when the backtick key is pressed
+        }
+      });
+
+      function generateQRCode(productId) {
+        $.get(`/log/generate_qr/${productId}`, function (data) {
+          if (data.qr_code) {
+            $(`#qr-code-${productId}`).html(
+              `<img src="data:image/png;base64,${data.qr_code}" alt="QR Code" />`
+            );
+          } else {
+            alert("QR code generation failed");
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

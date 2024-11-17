@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Product Search</h1>
+        <h2>Results for ID: <span class="highlight">{{ query }}</span></h2>
+    </header>
+    
+    <main>
+        {% if result %}
+            <section class="product-details">
+                <h3>Product Details</h3>
+                <ul>
+                  <strong>{{ result['name'] }}</strong> ({{ result['type'] }})
+                    <li><strong>Product ID:</strong> {{ result['id'] }}</li>
+                    <li><strong>Full Name:</strong> {{ result['name'] }}</li>
+                    <li><strong>Homebase:</strong> {{ result['hb'] }}</li>
+                    <li><strong>Condition:</strong> {{ result['condition'] }}</li>
+                    <li><strong>Date Received:</strong> {{ result['date_r'] }}</li>
+                    
+                    {% if result.get('settings') %}
+                    <li><strong>Parameters:</strong></li>
+                    <ul>
+                        {% for key, value in result['settings'].items() %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    {% if 'expiry_date' in result %}
+                    <li><strong>Expiry Date:</strong> {{ result['expiry_date'] }}</li>
+                    {% endif %}
+                </ul>
+            </section>
+        {% else %}
+            <section class="no-results">
+                <p>No product found with ID: <span class="highlight">{{ query }}</span>.</p>
+            </section>
+        {% endif %}
+    </main>
+    
+    <footer>
+        <a href="{{ url_for('index') }}">Back to Product List</a>
+    </footer>
+</body>
+</html>

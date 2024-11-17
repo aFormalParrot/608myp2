@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan QR Code - Viewer Mode</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link rel="icon" href="https://cdn.glitch.global/fbbe0751-dd17-47c2-9d1f-69b501a8cf80/logo.png?v=1731462727286" type="image/png">
+</head>
+<body>
+    <h1>Scan QR Code</h1>
+    <video id="video" width="300" height="300" autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+    <script>
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(function (stream) {
+          video.srcObject = stream;
+          video.setAttribute("playsinline", true);
+          video.play();
+        })
+        .catch(function (err) {
+          console.error("Camera access failed:", err);
+          alert("Camera access failed.");
+        });
+
+      video.addEventListener("play", function () {
+        setInterval(function () {
+          if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+            if (code) {
+              const productId = code.data;
+              window.location.href = `/view_product/${productId}`;
+            }
+          }
+        }, 500); 
+      });
+    </script>
+</body>
+</html>

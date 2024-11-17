@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="upload-container">
+        <h1>Upload Your Files</h1>
+        <form id="upload-form" action="/photo/upload" method="post" enctype="multipart/form-data">
+            <label for="file-upload" class="file-label">Choose files</label>
+            <input type="file" id="file-upload" name="files" accept="image/*" multiple required>
+            <button type="submit" class="upload-btn">Upload</button>
+        </form>
+    </div>
+
+    <div class="gallery-container">
+        <h2>Uploaded Images</h2>
+        <div id="image-grid" class="image-grid">
+            <!-- Images will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to dynamically load uploaded images
+        document.getElementById('upload-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const response = await fetch('/photo/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.images) {
+                const imageGrid = document.getElementById('image-grid');
+                data.images.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = "Uploaded Image";
+                    img.className = "gallery-image";
+                    imageGrid.appendChild(img);
+                });
+            } else {
+                alert('Error uploading files');
+            }
+        });
+    </script>
+</body>
+</html>

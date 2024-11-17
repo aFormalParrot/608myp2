@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Settings</title>
+    <link rel="icon" href="https://cdn.glitch.global/fbbe0751-dd17-47c2-9d1f-69b501a8cf80/logo.png?v=1731462727286" type="image/png">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Product Settings</h1>
+
+    <form method="POST">
+      <h2>Add New Product Type</h2>
+      <input type="text" name="new_type" placeholder="Product Type Name" />
+      <button type="submit" name="add_type">Add Type</button>
+    </form>
+
+    <form method="POST">
+      <h2>Add New Parameter to Product Type</h2>
+      <label for="selected_type">Product Type:</label>
+      <select name="selected_type" id="selected_type">
+        {% for type in product_types %}
+        <option value="{{ type }}">{{ type }}</option>
+        {% endfor %}
+      </select><br />
+
+      <label for="param_name">Parameter Name:</label>
+      <input type="text" id="param_name" name="param_name" required /><br />
+
+      <label for="param_type">Parameter Type:</label>
+      <select id="param_type" name="param_type">
+        <option value="text">Text</option>
+        <option value="value">Value</option>
+        <option value="date">Date</option>
+      </select><br />
+
+      <button type="submit" name="add_parameter">Add Parameter</button>
+    </form>
+    <a href="{{ url_for('index') }}">Back to Product List</a>
+  </body>
+</html>

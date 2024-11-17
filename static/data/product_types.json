@@ -1,0 +1,11 @@
+{
+    "Please Select Product Type": {
+        "1": "text"
+    },
+    "Food": {
+        "expiery-date": "date"
+    },
+    "Clothing": {
+        "Type": "text"
+    }
+}

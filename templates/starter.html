@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>608 MYP - Donation</title>
+    <link
+      rel="icon"
+      href="https://cdn.glitch.global/fbbe0751-dd17-47c2-9d1f-69b501a8cf80/logo.png?v=1731462727286"
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <h1>
+      6.08 MYP Action
+    </h1>
+    <button onclick="window.location.href='{{ url_for('index') }}'">
+      Logistics
+    </button>
+    <button onclick="window.location.href='{{ url_for('upload_page') }}'">
+      Photos
+    </button>
+  </body>
+</html>

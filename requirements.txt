@@ -1,0 +1,4 @@
+Flask  # Ensure Flask is listed here
+qrcode # Or whatever versions you're using
+pdfcrow
+
